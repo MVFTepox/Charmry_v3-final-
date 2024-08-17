@@ -79,10 +79,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script >
 import { defineComponent, ref, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
-import Filtro from "../components/filtro.vue";
+
 import Navbar from "@/components/Navbarr2.vue";
 import footerPage from "@/components/footer.vue";
 
@@ -100,29 +100,25 @@ export default defineComponent({
     const filterOpen = ref(false);
     const sortOpen = ref(false);
 
-    const fetchCategoryData = async (categoryId: number) => {
-  try {
-    const response = await fetch(`http://3.134.108.48:3333/api/categories`);
-    const data = await response.json();
-    const category = data.find((cat: any) => cat.id === categoryId);
-    if (category) {
-      currentCategoryName.value = category.category_name || "Phone Charms";
-      products.value = category.products || []; // Ensure products are filtered by the category
-    } else {
-      console.error("Category not found");
-      products.value = []; // Empty products if category is not found
+
+  async function fetchCategoryData(categoryId) {
+    try {
+      const response = await fetch(`http://3.134.108.48:3333/api/categories`);
+      const data = await response.json();
+      const category = data.find((cat) => cat.id === categoryId);
+      if (category) {
+        currentCategoryName.value = category.category_name || "Phone Charms";
+        products.value = category.products || []; // Ensure products are filtered by the category
+      } else {
+        console.error("Category not found");
+        products.value = []; // Empty products if category is not found
+      }
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+      products.value = []; // Empty products on error
     }
-  } catch (error) {
-    console.error("Error fetching category data:", error);
-    products.value = []; // Empty products on error
   }
-};
 
-
-    onMounted(() => {
-      const categoryId = 3; // example for 'phoneCharms'
-      fetchCategoryData(categoryId);
-    });
 
     const toggleFilter = () => {
       filterOpen.value = !filterOpen.value;
@@ -139,7 +135,7 @@ export default defineComponent({
       sortOpen.value = false;
     };
 
-    const sortBy = (criteria: string) => {
+    const sortBy = (criteria) => {
       console.log(`Sorting by ${criteria}`);
       closeDropdowns();
     };
