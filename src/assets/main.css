@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: DmSans;
+  src: url('./font/DM_Sans/DMSans-VariableFont_opsz\,wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal
+}
+@font-face {
+  font-family: elMessiri;
+  src: url(./font/El_Messiri/ElMessiri-VariableFont_wght.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal
+}
