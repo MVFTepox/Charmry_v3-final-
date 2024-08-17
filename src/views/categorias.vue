@@ -101,6 +101,8 @@ export default defineComponent({
     const sortOpen = ref(false);
 
 
+
+
   async function fetchCategoryData(categoryId) {
     try {
       const response = await fetch(`http://3.134.108.48:3333/api/categories`);
