@@ -29,6 +29,7 @@
 
 <script>
 import { defineComponent, ref} from 'vue';
+import { useAuthStore } from '@/stores/valoresGLobales';
 
 export default defineComponent({
   name: 'ProductCard',
@@ -42,6 +43,9 @@ export default defineComponent({
     const quantity = ref(1);
     const errors = ref({});
     const currentFill = ref(0);
+    const authStore = useAuthStore()
+
+    // authStore.setUserId(id)
 
     const wishClick = () => {
       currentFill.value = currentFill.value === 0 ? 1 : 0;
@@ -60,14 +64,36 @@ export default defineComponent({
           "Content-Type": "application/json"
         }
       };
+
         try {
           const response = await fetch("http://18.222.147.65:3333/api/detail_cart", requestOptions);
           const result = await response.text();
           console.log(result);
         } catch (error) {
           console.error("Error adding to cart:", error);
-          errors.value.general = "🔴 There was a problem adding the product to the cart. Please try again.";
+          errors.value.general = "🔴 There was a problem adding the product details to the cart. Please try again.";
         }
+
+        try {
+        const response = await fetch("http://18.222.147.65:3333/api/carts", { 
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: props.product_id,
+            detail_carts_id: quantity.value,
+          }),
+        });
+        const result = await response.text();
+        console.log(result);
+        } catch (error) {
+        console.error("Error creating cart:", error);
+        errors.value.general = "🔴 There was a problem adding a cart. Please try again.";
+        }
+
+
+
       };
       
     return {
