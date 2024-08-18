@@ -115,5 +115,14 @@ p {
 .filler:hover {
   font-variation-settings: "FILL" 1;
   cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.filler.filled {
+  color: #e91e63; /* Color para el corazón lleno */
+}
+
+.filler:not(.filled):hover {
+  color: #ff4081; /* Color para el corazón vacío al pasar el ratón */
 }
 </style>
