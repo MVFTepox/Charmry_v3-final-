@@ -1,6 +1,5 @@
 <template>
   <div
-    v-for="product in products" :key="product.id"
     class="rounded-lg border-solid border-[3px] p-3 m-2 flex flex-col justify-between h-[300px] w-[200px] border-[#eddaab] font-['DM Sans']"
   >
     <div class="flex justify-between">
@@ -11,7 +10,7 @@
       <span
         class="material-symbols-rounded filler text-[#b66141]"
         @click="toggleWish"
-        :style="{ fontVariationSettings: `'FILL' ${currentFill}` }"
+        :class="{ 'filled': isWished }"
       >
         favorite
       </span>
@@ -33,29 +32,27 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+<script>
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'ProductCard',
+  props: {
+    product: {
+      type: Object,
+      required: true
+    }
+  },
   setup() {
-    const products = ref<any[]>([]);
-    const currentFill = ref<number>(0);
-    const errors = ref<Record<string, string>>({});
+    const isWished = ref(false); // Estado para el corazón
 
     const toggleWish = () => {
-      currentFill.value = currentFill.value === 0 ? 1 : 0;
+      isWished.value = !isWished.value; // Cambia el estado al hacer clic
     };
 
-    
-
-
     return {
-      products,
-      currentFill,
+      isWished,
       toggleWish,
-      
-      errors
     };
   },
 });
@@ -65,8 +62,17 @@ export default defineComponent({
 p {
   color: #662f25;
 }
-.filler:hover {
-  font-variation-settings: 'FILL' 1;
+
+.filler {
   cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.filler.filled {
+  color: #e91e63; /* Color para el corazón lleno */
+}
+
+.filler:not(.filled):hover {
+  color: #ff4081; /* Color para el corazón vacío al pasar el ratón */
 }
 </style>
