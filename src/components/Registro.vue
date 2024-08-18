@@ -45,21 +45,23 @@
   </div>
 </template>
 
-<script lang="ts">
+
+<script>
+import router from '@/router';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'Registro',
   setup() {
-    const name = ref<string>('');
-    const email = ref<string>('');
-    const password = ref<string>('');
-    const confirmPassword = ref<string>('');
-    const termsAccepted = ref<boolean>(false);
-    const promotionsAccepted = ref<boolean>(false);
-    const errors = ref<Record<string, string>>({});
+    const name = ref('');
+    const email = ref('');
+    const password = ref('');
+    const confirmPassword = ref('');
+    const termsAccepted = ref(false);
+    const promotionsAccepted = ref(false);
+    const errors = ref({});
 
-    const register = () => {
+    const register = async () => {
       errors.value = {};
 
       if (!name.value) {
@@ -86,14 +88,41 @@ export default defineComponent({
         errors.value.termsAccepted = "🔴 Debe aceptar los términos y condiciones.";
       }
 
-      if (Object.keys(errors.value).length > 0) {
-        console.log("Errores:", errors.value);
+      if (Object.keys(errors.value).length === 0) {
+        try {
+          const response = await fetch('http://18.222.147.65:3333/api/user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_name: name.value.split(" ")[0],  
+              user_lastname: name.value.split(" ")[1] || "",
+              email: email.value,
+              passsword: password.value.trim(),
+              promotionsAccepted: promotionsAccepted.value,
+            }),
+          });
+
+          if (response.ok) {
+            console.log("Registro exitoso:", response);
+            router.push('/login');
+            // Aquí puedes redirigir al usuario a otra página o mostrar un mensaje de éxito
+          } else {
+            const errorData = await response.json();
+            console.error("Error en el registro:", errorData);
+            errors.value.general = "🔴 Hubo un problema con el registro. Por favor, intenta de nuevo.";
+          }
+        } catch (error) {
+          console.error("Error en el registro:", error);
+          errors.value.general = "🔴 Hubo un problema con el registro. Por favor, intenta de nuevo.";
+        }
       } else {
-        console.log("Formulario validado correctamente.");
+        console.log("Errores:", errors.value);
       }
     };
 
-    const validateEmail = (email: string) => {
+    const validateEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return re.test(email);
     };
@@ -112,8 +141,8 @@ export default defineComponent({
 });
 </script>
 
+
 <style scoped>
-/* Styles remain unchanged */
 .body {
   display: flex;
   justify-content: center;
@@ -129,7 +158,7 @@ export default defineComponent({
   font-family: 'DMSans', sans-serif;
   background-color: #fff8ec;
   padding: 24px;
-
+  
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
@@ -143,7 +172,6 @@ export default defineComponent({
   margin-bottom: 16px;
   color: #c1785c;
 }
-
 .title {
   font-size: 24px;
   font-weight: 600;
@@ -155,7 +183,6 @@ export default defineComponent({
   margin-bottom: 16px;
   text-align: left;
 }
-
 .form-group {
   margin-bottom: 16px;
   text-align: left;
@@ -166,7 +193,6 @@ export default defineComponent({
   color: #c1785c;
   margin-bottom: 8px;
 }
-
 .form-group label {
   display: block;
   color: #c1785c;
@@ -185,7 +211,6 @@ export default defineComponent({
 .form-group input:focus {
   border-color: #c1785c;
 }
-
 .form-group input:focus {
   border-color: #c1785c;
 }
@@ -195,7 +220,6 @@ export default defineComponent({
   align-items: center;
   margin-bottom: 16px;
 }
-
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -205,7 +229,6 @@ export default defineComponent({
 .checkbox-group input {
   margin-right: 8px;
 }
-
 .checkbox-group input {
   margin-right: 8px;
 }
@@ -213,7 +236,6 @@ export default defineComponent({
 .checkbox-group label {
   color: #c1785c;
 }
-
 .checkbox-group label {
   color: #c1785c;
 }
@@ -234,7 +256,6 @@ export default defineComponent({
   color: #c1785c;
   text-decoration: none;
 }
-
 .register-link {
   display: block;
   margin-bottom: 16px;
@@ -246,7 +267,6 @@ export default defineComponent({
 .register-link span {
   text-decoration: underline;
 }
-
 .register-link span {
   text-decoration: underline;
 }
@@ -254,7 +274,6 @@ export default defineComponent({
 .register-link:hover span {
   color: #a65c46;
 }
-
 .register-link:hover span {
   color: #a65c46;
 }
@@ -270,7 +289,6 @@ export default defineComponent({
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
 .submit-button {
   width: 50%;
   background-color: #a65c46;
@@ -322,6 +340,55 @@ export default defineComponent({
   .container {
     padding: 16px;
   }
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
 
   .title {
     font-size: 20px;
+  }
+  .title {
+    font-size: 20px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group input {
+    padding: 6px 10px;
+  }
+  .form-group input {
+    padding: 6px 10px;
+  }
+
+  .checkbox-group label {
+    font-size: 14px;
+  }
+  .checkbox-group label {
+    font-size: 14px;
+  }
+
+  .register-link {
+    font-size: 12px;
+  }
+  .register-link {
+    font-size: 12px;
+  }
+
+  .submit-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+  .submit-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+</style>
+
