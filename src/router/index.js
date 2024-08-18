@@ -6,7 +6,6 @@ import carrito from '@/views/carrito.vue'
 import pedidoConfirmado from '@/views/pedidoConfirmado.vue'
 import registro from '@/views/registro.vue'
 import Login from '@/views/login.vue'
-import ProductCard from '@/components/ProductCard.vue'
 import categorias from '@/views/categorias.vue'
 
 const router = createRouter({
@@ -25,9 +24,33 @@ const router = createRouter({
     },
 
     {
-      path: '/productcard',
-      name: 'productcard',
-      component: ProductCard
+      path: '/producto',
+      name: 'producto',
+      component: producto
+    },
+
+    {
+      path: '/carrito',
+      name: 'carrito',
+      component: carrito
+    },
+
+    {
+      path: '/pedidoConfirmado',
+      name: 'pedidoConfirmado',
+      component: pedidoConfirmado
+    },
+
+    {
+      path: '/registro',
+      name: 'registro',
+      component: registro
+    },
+
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
 
     {
