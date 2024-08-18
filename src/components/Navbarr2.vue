@@ -16,7 +16,7 @@
             <a href="#">Aretes</a>
             <a href="#">Collares</a>
             <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
         </div>
         <form class="search" role="search">

@@ -90,7 +90,6 @@ export default defineComponent({
   name: "CategoryPage",
   components: {
     ProductCard,
-    Filtro,
     Navbar,
     footerPage
   },
@@ -106,6 +105,7 @@ export default defineComponent({
       const response = await fetch(`http://3.134.108.48:3333/api/categories`);
       const data = await response.json();
       const category = data.find((cat) => cat.id === categoryId);
+      console.log(category);
       if (category) {
         currentCategoryName.value = category.category_name || "Phone Charms";
         products.value = category.products || []; // Ensure products are filtered by the category
@@ -139,6 +139,11 @@ export default defineComponent({
       console.log(`Sorting by ${criteria}`);
       closeDropdowns();
     };
+
+
+    onMounted(() => {
+      fetchCategoryData(4);  //Id de la categoría
+    });
 
     return {
       currentCategoryName,
