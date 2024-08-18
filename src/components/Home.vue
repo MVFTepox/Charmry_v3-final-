@@ -60,7 +60,7 @@ export default {
 
 .text-section h1 {
   top: 40%;
-  left: 60%;
+  left: 53%;
   transform: translate(-50%, -50%);
   font-size: 8rem;
   font-weight: 600;
@@ -74,7 +74,7 @@ export default {
 
 .text-section p {
   top: 70%;
-  left: 60%;
+  left: 53%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
   line-height: 1.2;
@@ -113,7 +113,6 @@ export default {
 }
 
 .carousel:hover .card:not(:hover)::after {
-  content: '';
   position: absolute;
   top: 0;
   left: 0;
