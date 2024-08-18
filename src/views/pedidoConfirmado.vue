@@ -4,16 +4,12 @@
   </div>
   <div>
     <div class="confirmation-page">
-      <h1 class="font-elmessiri">Tu pedido está confirmado!</h1>
+      <h1 class="font-elmessiri">¡Tu pedido está confirmado!</h1>
       <div class="confirmation-icon">
         <img src="@/assets/imgs/listo.png" alt="Confirmación">
       </div>
-      <p >Gracias  por tu orden!</p>
-      <a href="/">
-      <input type="button" class="font-DMsans" value="Terminar" />
-
-      </a>
-
+      <p>¡Gracias por tu orden!</p>
+      <input type="button" class="font-DMsans" value="Terminar" @click="abrirWhatsApp" />
     </div>
   </div>
   <div>
@@ -21,26 +17,28 @@
   </div>
 </template>
 
-<script >
-import { defineComponent, ref } from 'vue'
+<script>
+import { defineComponent } from 'vue'; 
 import footerPAge from '@/components/footer.vue';
 import Navbarr2 from '@/components/Navbarr2.vue';
 
 export default defineComponent({
-
   name: 'ConfirmationPage',
   components: {
     Navbarr2,
     footerPAge,
-    
+  },
+  methods: {
+    abrirWhatsApp() {
+      const numeroTelefono = '+52 8714030568'; // Reemplaza con el número de teléfono deseado
+      const mensaje = encodeURIComponent('Gracias por tu pedido, el vendedor se contactara contigo para la entrega del pedido...');
+      const enlaceWhatsApp = `https://wa.me/${numeroTelefono}?text=${mensaje}`;
+      
+      // Redirigir al enlace de WhatsApp
+      window.open(enlaceWhatsApp, '_blank');
+    }
   }
 })
-
-
-
-
-
-
 </script>
 
 <style scoped>
@@ -107,7 +105,7 @@ input[type="button"] {
     height: 80px;
   }
 
-  input [type="button"] {
+  input[type="button"] {
     padding: 8px 16px;
     font-size: 0.9em;
   }
@@ -128,7 +126,7 @@ input[type="button"] {
     height: 45px;
   }
 
-  input [type="button"] {
+  input[type="button"] {
     padding: 9px 18px;
     font-size: 0.95em;
   }

@@ -34,7 +34,6 @@ export default {
   name: 'CharmeryPage'
 }
 </script>
-
 <style scoped>
 .body {
   height: 100vh;
@@ -60,7 +59,7 @@ export default {
 
 .text-section h1 {
   top: 40%;
-  left: 53%;
+  left: 50%;
   transform: translate(-50%, -50%);
   font-size: 8rem;
   font-weight: 600;
@@ -74,7 +73,7 @@ export default {
 
 .text-section p {
   top: 70%;
-  left: 53%;
+  left: 50%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
   line-height: 1.2;
