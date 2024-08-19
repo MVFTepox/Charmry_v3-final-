@@ -22,6 +22,18 @@ const router = createRouter({
       component: prueba
     },
 
+    {
+      path: '/carrito',
+      name: 'carrito',
+      component: carrito
+    },
+
+    {
+      path: '/pedidoconfirmado',
+      name: 'pedidoconfirmado',
+      component: pedidoConfirmado
+    },
+
     
   ]
 })
