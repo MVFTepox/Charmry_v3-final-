@@ -28,6 +28,18 @@ const router = createRouter({
     },
 
     {
+      path: '/carrito',
+      name: 'carrito',
+      component: carrito
+    },
+
+    {
+      path: '/pedidoconfirmado',
+      name: 'pedidoconfirmado',
+      component: pedidoConfirmado
+    },
+
+    {
       path: '/producto',
       name: 'producto',
       component: producto,
