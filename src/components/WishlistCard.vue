@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between" style="width: 500px; height: 280px">
+  <div class="flex justify-between border-4 border-[#eddaab]  rounded-lg shadow-lg" style="width: 500px; height: 280px">
     <div
       class="rounded-lg border-solid border-[#eddaab] m-3"
       id="wishlistImage"
@@ -61,20 +61,21 @@ export default defineComponent({
       try {
         const response = await fetch(`http://18.222.147.65:3333/api/images`);
         const data = await response.json();
+        // Encuentra la imagen correspondiente al producto
         const image = data.find(image => image.product_id === props.product.id);
-        imageUrl.value = image ? image.image_url : '';
+        imageUrl.value = image ? image.image_url : 'URL_DEFAULT_DE_IMAGEN'; // Proporciona una URL por defecto si no se encuentra la imagen
       } catch (error) {
-        console.log('Error al obtener las imagenes:', error);
+        console.log('Error al obtener las imágenes:', error);
+        imageUrl.value = 'URL_DEFAULT_DE_IMAGEN'; // Proporciona una URL por defecto en caso de error
       }
     }
 
     async function fetchProducts() {
       try {
-        const response = await fetch('http://18.222.147.65:3333/api/products/${props.product.id}');
+        const response = await fetch(`http://18.222.147.65:3333/api/products/${props.product.id}`);
         const data = await response.json();
-        nombreDelArticulo.value = data.product_name;
-        precioDelArticulo.value = data.price;
-        console.log(data.value);
+        nombreDelArticulo.value = data.product_name || 'Nombre no disponible';
+        precioDelArticulo.value = data.price ? `$${data.price}` : 'Precio no disponible';
       } catch (error) {
         console.log('Error al obtener los productos:', error);
       } 
@@ -93,14 +94,13 @@ export default defineComponent({
       imageUrl,
       currentFill,
       removeFromWished,
-      fetchImage,
-      fetchProducts,
       precioDelArticulo,
       nombreDelArticulo
     };
   }
 });
 </script>
+
 
 <style scoped>
 p {
