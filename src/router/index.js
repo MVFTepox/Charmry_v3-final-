@@ -24,10 +24,12 @@ const router = createRouter({
     },
 
     {
-      path: '/producto',
+      path: '/producto/:id',
       name: 'producto',
       component: producto,
+      props: route => ({ id: Number(route.params.id) })
     },
+    
 
     {
       path: '/carrito',
