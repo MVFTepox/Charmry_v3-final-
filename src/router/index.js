@@ -20,19 +20,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-
     {
       path: '/prueba',
       name: 'prueba',
       component: prueba
     },
-
-    {
-      path: '/carrito',
-      name: 'carrito',
-      component: carrito
-    },
-
     {
       path: '/pedidoconfirmado',
       name: 'pedidoconfirmado',
