@@ -1,6 +1,7 @@
 <template>
     <div>
         <CarruselesDeProductosPorCategoria />
+        <WishlistCard />	
     </div>
 </template>
 
@@ -8,12 +9,13 @@
 import { defineComponent, ref } from 'vue'
 import ProductCard from '@/components/ProductCard.vue';
 import CarruselesDeProductosPorCategoria from '@/components/carruseles/CarruselesDeProductosPorCategoria.vue';
-
+import WishlistCard from '@/components/WishlistCard.vue';
 export default defineComponent({
     name: 'prueba',
     components: {
         ProductCard,
-        CarruselesDeProductosPorCategoria
+        CarruselesDeProductosPorCategoria,
+        WishlistCard
     },
     setup() {
 

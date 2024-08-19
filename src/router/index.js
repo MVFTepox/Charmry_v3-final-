@@ -7,6 +7,7 @@ import pedidoConfirmado from '@/views/pedidoConfirmado.vue'
 import registro from '@/views/registro.vue'
 import Login from '@/views/login.vue'
 import categorias from '@/views/categorias.vue'
+import favoritos from '@/views/favoritos.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,13 @@ const router = createRouter({
       name: 'categorias',
       component: categorias
     },
+
+    {
+      path: '/favoritos',
+      name: 'favoritos',
+      component: favoritos
+    },
+
     
 
     
