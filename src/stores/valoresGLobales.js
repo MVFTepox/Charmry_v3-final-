@@ -2,18 +2,21 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        isLoggedIn: false,
-        userId: null,
+        isLoggedIn: JSON.parse(localStorage.getItem('isLoggedIn')) || false,
+        userId: JSON.parse(localStorage.getItem('userId')) || null
     }),
     actions: {
         setLoginStatus(status) {
             this.isLoggedIn = status;
+            localStorage.setItem('isLoggedIn', JSON.stringify(status));
         },
         setUserId(id) {
             this.userId = id;
+            localStorage.setItem('userId', JSON.stringify(id));
         },
     },
 });
+
 
 //explicacion rapida cuando la uses tienes que importar este archivo al componente que lo requiere.
 //import { useAuthStore } from '@/stores/auth'
