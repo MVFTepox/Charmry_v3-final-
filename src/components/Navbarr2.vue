@@ -12,11 +12,11 @@
             <img src="../assets/imgs/down.png" alt="Cuenta">
           </a>
           <div :class="{'categorias-menu': true, 'show': isCategorias}" @click.stop>
-            <a href="#">Anillos</a>
-            <a href="#">Aretes</a>
-            <a href="#">Collares</a>
-            <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categoriasAnillos">Anillos</a>
+            <a href="/categoriasAretes">Aretes</a>
+            <a href="/categoriasCollares">Collares</a>
+            <a href="/categoriasPulseras">Pulseras</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
         </div>
         <form class="search" role="search">

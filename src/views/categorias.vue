@@ -2,11 +2,10 @@
   <Navbar />
   <div @click="closeDropdowns">
     <div class="relative zoom-out">
-      <img src="../assets/img/category.png" :alt="currentCategoryName"
+      <img src="../assets/imgs/PhoneCharms.jpg" alt="Phone Charms"
         class="w-full object-cover h-48 sm:h-64 md:h-80 lg:h-96" />
       <h1
         class="absolute inset-x-0 top-1/2 transform -translate-y-1/2 text-[#fbf8ee] text-3xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl text-center font-bold font-elmessiri">
-        {{ currentCategoryName.charAt(0).toUpperCase() + currentCategoryName.slice(1).toLowerCase() }}
       </h1>
     </div>
     <div class="p-4 sm:p-6 md:p-8">
@@ -46,9 +45,8 @@
         </div>
       </div>
       <div class="product-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 p-4">
-        <ProductCard />
+        <ProductCardCategories v-for="product in filteredProducts" :key="product.id" :product="product"/>
       </div>
-
     </div>
   </div>
   <div>
@@ -58,51 +56,38 @@
 
 <script>
 import { defineComponent, ref, onMounted } from "vue";
-import ProductCard from "../components/ProductCard.vue";
-
 import Navbar from "@/components/Navbarr2.vue";
 import footerPage from "@/components/footer.vue";
+import ProductCardCategories from "@/components/ProductCardCategories.vue";
 
 export default defineComponent({
   name: "CategoryPage",
   components: {
-    ProductCard,
     Navbar,
-    footerPage
-  },
-
-  props: {
-    categoreaID: {
-      type: Number,
-      required: true
-    }
+    footerPage,
+    ProductCardCategories,
   },
   setup() {
-
-
     const sortOpen = ref(false);
-
+    const filterOpen = ref(false); // Asegúrate de definir filterOpen
+    const CategoryId = 4;
     const filteredProducts = ref([]);
 
     async function fetchProducts() {
       try {
         const response = await fetch('http://18.222.147.65:3333/api/products');
         const data = await response.json();
-        filteredProducts.value = data.filter(product => product.category_id === props.categoryId);
+        filteredProducts.value = data.filter(product => product.category_id === CategoryId);
         console.log(filteredProducts.value);
       } catch (error) {
         console.log('Error al obtener los productos:', error);
       }
     }
 
-    onMounted(() => {
-      fetchProducts();
-    });
-
-
-
-
-
+    const toggleFilter = () => {
+      filterOpen.value = !filterOpen.value;
+      sortOpen.value = false;
+    };
 
     const toggleSort = () => {
       sortOpen.value = !sortOpen.value;
@@ -119,18 +104,19 @@ export default defineComponent({
       closeDropdowns();
     };
 
+    onMounted(() => {
+      fetchProducts();
+    });
+
     return {
-      currentCategoryName,
-      products,
       filterOpen,
       sortOpen,
       toggleFilter,
       toggleSort,
       closeDropdowns,
       sortBy,
-
+      filteredProducts,
     };
-
   },
 });
 </script>

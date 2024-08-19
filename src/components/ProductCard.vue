@@ -54,7 +54,7 @@ export default defineComponent({
       isWished,
       toggleWish,
     };
-  },
+  }
 });
 </script>
 

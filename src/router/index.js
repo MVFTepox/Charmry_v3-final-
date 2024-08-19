@@ -7,6 +7,10 @@ import pedidoConfirmado from '@/views/pedidoConfirmado.vue'
 import registro from '@/views/registro.vue'
 import Login from '@/views/login.vue'
 import categorias from '@/views/categorias.vue'
+import categoriasAnillos from '@/views/categoriasAnillos.vue'
+import categoriasAretes from '@/views/categoriasAretes.vue'
+import categoriasCollares from '@/views/categoriasCollares.vue'
+import categoriasPulseras from '@/views/categoriasPulseras.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +62,30 @@ const router = createRouter({
       name: 'categorias',
       component: categorias
     },
+
+    {
+      path: '/categoriasAnillos',
+      name: 'categoriasAnillos',
+      component: categoriasAnillos
+    },
+
+    {
+      path: '/categoriasAretes',
+      name: 'categoriasAretes',
+      component: categoriasAretes
+    },
+
+    {
+      path: '/categoriasCollares',
+      name: 'categoriasCollares',
+      component: categoriasCollares
+    },
+
+    {
+      path: '/categoriasPulseras',
+      name: 'categoriasPulseras',
+      component: categoriasPulseras
+    }
     
 
     
