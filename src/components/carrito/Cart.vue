@@ -62,7 +62,7 @@
 
           <div class="flex justify-center">
             <a href="/pedidoconfirmado">
-              <button class="mt-4 px-3 py-2 rounded-3xl w-full text-lg md:text-xl font-medium tracking-wide hover:scale-105 font-DMsans"
+              <button class="mt-4 px-6  py-2 w-- rounded-3xl w-full text-lg md:text-xl font-medium  tracking-wide hover:scale-105 font-DMsans"
                 style="background-color: #b66141; color: #eddaab;">Pagar</button>
             </a>
           </div>
@@ -75,6 +75,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import CartItem from "@/components/carrito/cartCard.vue";
+import {useAuthStore} from "@/stores/valoresGLobales";
 
 
 export default {
@@ -82,7 +83,8 @@ export default {
     CartItem
   },
   setup() {
-    const userId = 11; // Preset user ID
+    const authStore = useAuthStore();
+    const userId = authStore.userId;
     const selectAll = ref(true);
     const items = ref([]);
     const shipping = ref('standard');
