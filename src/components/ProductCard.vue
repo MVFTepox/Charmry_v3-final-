@@ -6,7 +6,7 @@
         <p class="font-bold font-DMsans">{{ product.product_name }}</p>
         <p class="text-[#b66141] font-DMsans">${{ product.price }}</p>
       </a>
-      <span class="material-symbols-rounded filler text-[#b66141]" @click="wishClick"
+      <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite" 
         :style="{ fontVariationSettings: `'FILL' ${currentFill}` }">
         favorite
       </span>
@@ -38,21 +38,72 @@ export default defineComponent({
     const quantity = ref(1);
     const errors = ref({});
     const currentFill = ref(0);
-    const authStore = useAuthStore()
+    const authStore = useAuthStore();
+    
+    const logeado = authStore.isLoggedIn; // Valor que indica si el usuario está logueado
+    const userID = authStore.userId;
 
-    authStore.setUserId(1)
+   
 
-    const userID = authStore.userId
-
-
-    const wishClick = () => {
-      currentFill.value = currentFill.value === 0 ? 1 : 0;
+    const checkUserLoggedIn = () => {
+      if (!logeado) {
+        alert("No estás logueado");
+        return false;
+      }
+      return true;
     };
 
+    const toggleFavorite = async () => {
+      if (!checkUserLoggedIn()) return;
+
+      try {
+        if (currentFill.value === 0) {
+          // Agregar a favoritos
+          const response = await fetch('http://18.222.147.65:3333/api/favorites', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user_id: userID,
+              product_id: props.product.id
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to add product to favorites');
+          }
+          console.log('Product added to favorites');
+          currentFill.value = 1; // Actualiza el estado para mostrar el corazón lleno
+        } else {
+          // Eliminar de favoritos
+          const response = await fetch('http://18.222.147.65:3333/api/favorites', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user_id: userID,
+              product_id: props.product.id
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to remove product from favorites');
+          }
+
+          currentFill.value = 0; // Actualiza el estado para mostrar el corazón vacío
+        }
+      } catch (error) {
+        console.error('Error managing favorites:', error);
+      }
+    };
 
     async function addToCart() {
+      if (!checkUserLoggedIn()) return;
+
       try {
-        // Add product to detail cart
+        // Agregar producto al detail cart
         const addResponse = await fetch('http://18.222.147.65:3333/api/detail-cart', {
           method: 'POST',
           headers: {
@@ -69,28 +120,17 @@ export default defineComponent({
           throw new Error('Failed to add product to detail cart');
         }
 
-        const addedDetail = await addResponse.json(); // Assuming the response is JSON and contains the detail cart ID
+        const addedDetail = await addResponse.json(); // Obtener el ID del detail cart agregado
 
-
-        // Fetch the updated detail cart
-        const detailCartResponse = await fetch('http://18.222.147.65:3333/api/detail-cart');
-        if (!detailCartResponse.ok) {
-          
-          throw new Error('Failed to fetch detail cart');
-        }
-
-        const carritodatos = await detailCartResponse.json();
-        console.log(carritodatos);
-
-        // POST to carts
+        // Posteriormente, enviar el detalle al carrito principal
         const cartResponse = await fetch('http://18.222.147.65:3333/api/carts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            user_id: userID,
-            details_cart_id: carritodatos.id // Use the ID from the fetched detail cart
+            user_id: userID, // Asigna el ID del usuario
+            details_cart_id: addedDetail.id // Usa el ID del detail cart agregado
           })
         });
 
@@ -103,16 +143,15 @@ export default defineComponent({
 
       } catch (error) {
         console.error('Error:', error);
-        errors.value.general = '🔴 There was a problem processing your request. Please try again.';
+        errors.value.general = '🔴 Hubo un problema al procesar tu solicitud. Por favor, inténtalo de nuevo.';
       }
     }
+
     return {
       currentFill,
       quantity,
-      wishClick,
+      toggleFavorite,
       addToCart,
-
-
     };
   }
 });
