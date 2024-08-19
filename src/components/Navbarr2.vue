@@ -12,11 +12,11 @@
             <img src="../assets/imgs/down.png" alt="Cuenta">
           </a>
           <div :class="{'categorias-menu': true, 'show': isCategorias}" @click.stop>
-            <a href="#">Anillos</a>
-            <a href="#">Aretes</a>
-            <a href="#">Collares</a>
-            <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categoriasAnillos">Anillos</a>
+            <a href="/categoriasAretes">Aretes</a>
+            <a href="/categoriasCollares">Collares</a>
+            <a href="/categoriasPulseras">Pulseras</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
         </div>
         <form class="search" role="search">
@@ -42,10 +42,10 @@
     <!-- Offcanvas para pantallas pequeñas -->
     <nav class="small-screen-menu">
       <div class="offcanvas-toggle" @click="toggleOffcanvas">
-        <img src="../assets/img/menu.png" alt="Menu">
+        <img src="../assets/imgs/menu.png" alt="Menu">
       </div>
       <a class="navbar-brand" href="/">
-        <img src="../assets/img/logo.png" alt="Logo" />
+        <img src="../assets/imgs/logo.png" alt="Logo" />
       </a>
       <!-- <div class="search-icon" @click="toggleOffcanvas">
         <img src="../assets/img/search.png" alt="Search">
@@ -59,11 +59,11 @@
         <div class="offcanvas-content">
           <a href="#" @click="toggleOffcanvasCategorias">Categorías</a>
           <div :class="{'categorias-menu': true, 'show': isOffcanvasCategorias}">
-            <a href="#">Anillos</a>
-            <a href="#">Aretes</a>
-            <a href="#">Collares</a>
-            <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categoriasAnillos">Anillos</a>
+            <a href="/categoriasAretes">Aretes</a>
+            <a href="/categoriasCollares">Collares</a>
+            <a href="/categoriasPulseras">Pulseras</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
           <a href="#">Favoritos</a>
           <a href="#" @click="toggleOffcanvasAccountMenu">Cuenta</a>
