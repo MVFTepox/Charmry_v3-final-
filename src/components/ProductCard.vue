@@ -39,12 +39,23 @@ export default defineComponent({
     const errors = ref({});
     const currentFill = ref(0);
     const authStore = useAuthStore();
-
-    authStore.setUserId(2);
-
+    
+    const logeado = authStore.isLoggedIn; // Valor que indica si el usuario está logueado
     const userID = authStore.userId;
 
+   
+
+    const checkUserLoggedIn = () => {
+      if (!logeado) {
+        alert("No estás logueado");
+        return false;
+      }
+      return true;
+    };
+
     const toggleFavorite = async () => {
+      if (!checkUserLoggedIn()) return;
+
       try {
         if (currentFill.value === 0) {
           // Agregar a favoritos
@@ -89,6 +100,8 @@ export default defineComponent({
     };
 
     async function addToCart() {
+      if (!checkUserLoggedIn()) return;
+
       try {
         // Agregar producto al detail cart
         const addResponse = await fetch('http://18.222.147.65:3333/api/detail-cart', {
