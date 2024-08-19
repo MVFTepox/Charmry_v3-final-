@@ -8,8 +8,9 @@
       <div class="confirmation-icon">
         <img src="@/assets/imgs/listo.png" alt="Confirmación">
       </div>
-      <p>¡Gracias por tu orden!</p>
-      <input type="button" class="font-DMsans" value="Terminar" @click="abrirWhatsApp" />
+      <p>¡Gracias por tu orden! </p>
+      <p>!Comunicate con el vendedor para acordar el envio!</p>
+      <input type="button" class="font-DMsans" value="Contactar" @click="abrirWhatsApp" />
     </div>
   </div>
   <div>
@@ -30,9 +31,8 @@ export default defineComponent({
   },
   methods: {
     abrirWhatsApp() {
-      const numeroTelefono = '+52 8714030568'; // Reemplaza con el número de teléfono deseado
-      const mensaje = encodeURIComponent('Gracias por tu pedido, el vendedor se contactara contigo para la entrega del pedido...');
-      const enlaceWhatsApp = `https://wa.me/${numeroTelefono}?text=${mensaje}`;
+      const numeroTelefono = '+528714030568'; // Reemplaza con el número de teléfono deseado
+      const enlaceWhatsApp = `https://wa.me/${numeroTelefono}`;
       
       // Redirigir al enlace de WhatsApp
       window.open(enlaceWhatsApp, '_blank');
