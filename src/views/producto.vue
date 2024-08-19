@@ -159,6 +159,7 @@ export default defineComponent({
 
                 const result = await cartResponse.text();
                 console.log(result);
+                alert('🟢 El producto ha sido agregado a tu bolsa de deseos');
 
             } catch (error) {
                 console.error('Error:', error);

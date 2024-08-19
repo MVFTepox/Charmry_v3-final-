@@ -6,11 +6,11 @@
         <div class="flex justify-between">
             <h1 class="text-[#cb8844] text-4xl font-elmessiri">Lista de Deseos</h1>
             <div>
-                <!-- <button
+                <button
                     class="btn h-[40px] font-DmSans rounded-lg bg-[#cb8844] w-[180px] text-white hover:bg-white hover:border-[#cb8844] hover:border-[2px] hover:text-[#cb8844]"
                     @click="deleteAllFavorites">
                     Eliminar Todo
-                </button> -->
+                </button>
             </div>
         </div>
         <hr style="border-color: #eddaab" class="m-4" />
@@ -19,36 +19,47 @@
         </div>
     </div>
 </template>
+
 <script>
 import Navbarr2 from '@/components/Navbarr2.vue';
 import WishlistCard from '@/components/WishlistCard.vue';
 import { useAuthStore } from '@/stores/valoresGLobales';
 import { defineComponent, ref, onMounted } from 'vue';
+
 export default defineComponent({
     name: 'Favoritos',
     components: {
         Navbarr2,
         WishlistCard
     },
-    
+
     setup(props) {
         const authStore = useAuthStore();
-        const userId = authStore.userId;
+        const userId = ref(authStore.userId); // Usar ref para reactividad
         const filteredFavorites = ref([]);
-        
 
         async function fetchFavorites() {
+            if (!userId.value) {
+                console.warn('No userId available. Cannot fetch favorites.');
+                return;
+            }
+
             try {
                 const response = await fetch('http://18.222.147.65:3333/api/favorites');
                 const data = await response.json();
-                filteredFavorites.value = data.filter(data => data.user_id === userId);
-                console.log(filteredFavorites.value);
+                filteredFavorites.value = data.filter(favorite => favorite.user_id === userId.value);
+                console.log('Favorites fetched:', filteredFavorites.value);
             } catch (error) {
                 console.log('Error al obtener los productos:', error);
             }
         }
 
         async function deleteAllFavorites() {
+            if (!userId.value) {
+                console.warn('No userId available. Cannot delete favorites.');
+                return;
+            }
+
             try {
                 const response = await fetch('http://18.222.147.65:3333/api/favorites', {
                     method: 'DELETE',
@@ -56,29 +67,35 @@ export default defineComponent({
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        user_id: userId
+                        user_id: userId.value // Asegúrate de que esto esté en el formato esperado por el servidor
                     })
                 });
+
                 if (!response.ok) {
                     throw new Error('Failed to delete all favorites');
                 }
+
+                // Volver a obtener los favoritos después de la eliminación
+                await fetchFavorites();
             } catch (error) {
                 console.error('Error al eliminar todos los favoritos:', error);
             }
         }
 
+        
+
         onMounted(() => {
             fetchFavorites();
         });
+
         return {
             fetchFavorites,
             deleteAllFavorites,
             filteredFavorites,
-            userId,
-            authStore
-
+            userId
         };
     }
-})
+});
 </script>
+
 <style scoped></style>
