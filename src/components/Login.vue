@@ -187,15 +187,20 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/valoresGLobales'
 export default defineComponent({
   name: 'Login',
   setup() {
     const email = ref<string>('');
     const password = ref<string>('');
     const errors = ref<{ email?: string; password?: string }>({});
+    const router = useRouter(); // Create a router instance
 
-    const login = () => {
+    const authStore = useAuthStore();
+    
+
+    const login = async () => {
       errors.value = {};
 
       if (!email.value) {
@@ -207,9 +212,27 @@ export default defineComponent({
       }
 
       if (Object.keys(errors.value).length === 0) {
-        console.log("Formulario válido. Proceder con la autenticación.");
-      } else {
-        console.log("Errores:", errors.value);
+        try {
+          const response = await fetch('http://18.222.147.65:3333/api/user');
+          const data = await response.json();
+
+          // Check if there is a matching user
+          const user = data.find((user: any) => user.email === email.value && user.passsword === password.value);
+
+          if (user) {
+            authStore.setLoginStatus(true);
+            authStore.setUserId(user.id);
+            console.log(user.id);
+            // Redirect to another page on successful login
+            router.push('/'); // Change '/dashboard' to your desired route
+            console.log('Autenticación exitosa');
+          } else {
+            errors.value.email = "🔴 Correo electrónico o contraseña incorrectos";
+          }
+        } catch (error) {
+          console.log('Error al obtener los usuarios:', error);
+          errors.value.email = "🔴 Error en la autenticación, por favor inténtalo de nuevo";
+        }
       }
     };
 
