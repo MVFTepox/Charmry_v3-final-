@@ -2,18 +2,18 @@
   <div
     class="rounded-lg border-solid border-[3px] p-3 m-2 flex flex-col justify-between h-[300px] w-[200px] border-[#eddaab] font-['DM Sans']">
     <div class="flex justify-between">
-      <a href="/producto" class="flex flex-col mb-2">
+      <router-link :to="{ name: 'producto', params: { id: idproduct } }">
         <p class="font-bold font-DMsans">{{ product.product_name }}</p>
         <p class="text-[#b66141] font-DMsans">${{ product.price }}</p>
-      </a>
-      <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite" 
+      </router-link>
+      <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite"
         :style="{ fontVariationSettings: `'FILL' ${currentFill}` }">
         favorite
       </span>
     </div>
-    <a href="/vistaProducto">
+    <router-link :to="{ name: 'producto', params: { id: idproduct } }">
       <img :src="product.Images[0]?.image_url" alt="Product Image" class="w-full h-[150px] object-cover mb-2" />
-    </a>
+    </router-link>  
     <button @click="addToCart"
       class="flex rounded-full justify-center h-[30px] bg-[#b66141] border-solid border-[3px] hover:border-[#eddaab] border-[#b66141] hover:bg-white text-[#eddaab]">
       <span class="material-symbols-rounded">shopping_bag</span>
@@ -25,6 +25,7 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { useAuthStore } from '@/stores/valoresGLobales';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ProductCard',
@@ -39,11 +40,13 @@ export default defineComponent({
     const errors = ref({});
     const currentFill = ref(0);
     const authStore = useAuthStore();
-    
+    const idproduct = props.product.id
+
     const logeado = authStore.isLoggedIn; // Valor que indica si el usuario está logueado
     const userID = authStore.userId;
 
-   
+    const router = useRouter();
+
 
     const checkUserLoggedIn = () => {
       if (!logeado) {
@@ -69,7 +72,7 @@ export default defineComponent({
               product_id: props.product.id
             })
           });
-          
+
           if (!response.ok) {
             throw new Error('Failed to add product to favorites');
           }
@@ -140,6 +143,7 @@ export default defineComponent({
 
         const result = await cartResponse.text();
         console.log(result);
+        alert('🟢 El producto ha sido agregado a tu bolsa de deseos');
 
       } catch (error) {
         console.error('Error:', error);
@@ -152,6 +156,8 @@ export default defineComponent({
       quantity,
       toggleFavorite,
       addToCart,
+      
+      idproduct
     };
   }
 });

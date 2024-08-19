@@ -1,52 +1,24 @@
 <template>
-  <div class="flex justify-between" style="width: 500px; height: 280px">
-    <div
-      class="rounded-lg border-solid border-[#eddaab] m-3"
-      id="wishlistImage"
-      style="border-width: 3px; width: 200px; height: 250px"
-    ></div>
+  <div class="flex justify-between border-4 m-8 border-[#eddaab]  rounded-lg shadow-lg"
+    style="width: 500px; height: 280px">
+    <div class="rounded-lg border-solid border-[#eddaab] m-3" id="wishlistImage"
+      style="border-width: 3px; width: 200px; height: 250px">
+      <img :src="imageUrl" alt="Product Image" class="w-full h-full object-cover" />
+    </div>
     <div class="flex flex-col justify-between h-full w-1/2 p-3">
       <div class="flex justify-between">
         <div>
-          <p>productName</p>
-          <p>$productPrice</p>
+          <p class="font-elmessiri text-3xl text-[#b66141]">{{ nombreDelArticulo }}</p>
+          <p class="font-elmessiri text-5xl">{{ precioDelArticulo }}</p>
         </div>
-        <span
-          class="material-symbols-rounded hover:cursor-pointer text-[#b66141]"
-          @click="removeFromWished"
-          :style="{ fontVariationSettings: `'FILL' ${currentFill}` }"
-        >
-          favorite
-        </span>
+
       </div>
       <div>
-        <div class="rounded-full bg-[#eddaab] m-1 flex justify-between w-24" style="height: 30px">
-          <button
-            type="button"
-            @click="quantityDecrement"
-            class="hover:bg-[#cb8844] rounded-s-full flex items-center px-1"
-          >
-            <span class="material-symbols-rounded text-[#b66141]"> remove </span>
-          </button>
-          <input
-            type="text"
-            v-model="productQuantity"
-            class="caret-[#662f25] bg-[#eddaab] placeholder:text-[#662f25] text-center w-[30px] outline-none"
-          />
-          <button
-            type="button"
-            @click="quantityIncrement"
-            class="hover:bg-[#cb8844] rounded-e-full flex items-center px-1"
-          >
-            <span class="material-symbols-rounded" style="color: #b66141"> add </span>
-          </button>
-        </div>
         <div class="flex justify-between">
           <button
             class="flex rounded-full justify-center bg-[#b66141] m-1 border-2 border-[#b66141] text-[#eddaab] h-[30px] w-[170px] hover:border-[#eddaab] hover:bg-white"
-            id=""
-          >
-            <span class="material-symbols-rounded"> shopping_bag </span>
+            id="">
+            <span @click="addToCart" class="material-symbols-rounded"> shopping_bag </span>
             Añadir a Bolsa
           </button>
           <button>
@@ -57,58 +29,133 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { fetchProduct } from '@/Utils/api';
-export default {
+
+<script>
+import { defineComponent, ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/valoresGLobales';
+
+export default defineComponent({
   name: 'WishlistCard',
-  data() {
-    return {
-      productQuantity: 1,
-      currentFill: 1,
-      product: null, 
-      loading: false 
+  props: {
+    product: {
+      type: Object,
+      required: true
     }
   },
-  props:{
-    product_id: Number,
-  },
-  methods: {
-    quantityIncrement() {
-      this.productQuantity++
-    },
 
-    quantityDecrement() {
-      if (this.productQuantity > 1) {
-        this.productQuantity--
-      }
-    },
+  setup(props) {
+    const currentFill = ref(1);
+    const imageUrl = ref('');
+    const nombreDelArticulo = ref('');
+    const precioDelArticulo = ref('');
 
-    removeFromWished() {
-      this.currentFill = 0
-    },
-    async loadProduct(product_id) {
-      this.loading = true;
+    const authStore = useAuthStore(); 
+    const userID = authStore.userId; 
+
+    async function fetchImage() {
       try {
-        const response = await fetchProduct(id);
-        this.product = response.data; // Assuming the API response has a `data` property with product details
-      } catch (err) {
-        console.error('Failed to load product.');
-      } finally {
-        this.loading = false;
+        const response = await fetch(`http://18.222.147.65:3333/api/images`);
+        const data = await response.json();
+        // Encuentra la imagen correspondiente al producto
+        const image = data.find(image => image.product_id === props.product.id);
+        imageUrl.value = image ? image.image_url : 'URL_DEFAULT_DE_IMAGEN'; // Proporciona una URL por defecto si no se encuentra la imagen
+      } catch (error) {
+        console.log('Error al obtener las imágenes:', error);
+        imageUrl.value = 'URL_DEFAULT_DE_IMAGEN'; // Proporciona una URL por defecto en caso de error
       }
-    },
+    }
+
+    async function fetchProducts() {
+      try {
+        const response = await fetch(`http://18.222.147.65:3333/api/products/${props.product.id}`);
+        const data = await response.json();
+        nombreDelArticulo.value = data.product_name || 'Nombre no disponible';
+        precioDelArticulo.value = data.price ? `$${data.price}` : 'Precio no disponible';
+      } catch (error) {
+        console.log('Error al obtener los productos:', error);
+      }
+    }
+
+    async function addToCart() {
+      try {
+        // Agregar producto al detail cart
+        const addResponse = await fetch('http://18.222.147.65:3333/api/detail-cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            product_id: props.id,
+            quantity: 1,
+            price: parseFloat(precioDelArticulo.value.replace('$', '')) // Extrae el precio numérico
+          })
+        });
+
+        if (!addResponse.ok) {
+          throw new Error('Failed to add product to detail cart');
+        }
+
+        const addedDetail = await addResponse.json();
+
+        // Posteriormente, enviar el detalle al carrito principal
+        const cartResponse = await fetch('http://18.222.147.65:3333/api/carts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userID,
+            details_cart_id: addedDetail.id
+          })
+        });
+
+        if (!cartResponse.ok) {
+          throw new Error('Failed to add detail cart to the main cart');
+        }
+
+        const result = await cartResponse.text();
+        console.log(result);
+
+        alert('🟢 El producto ha sido agregado a tu bolsa de deseos');
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('🔴 Hubo un problema al procesar tu solicitud. Por favor, inténtalo de nuevo.'); // Muestra un mensaje de error al usuario
+      }
+    }
 
 
+    function removeFromWished() {
+      currentFill.value = 0;
+    }
+
+    onMounted(() => {
+      fetchImage();
+      fetchProducts();
+    });
+
+    return {
+      imageUrl,
+      currentFill,
+      removeFromWished,
+      precioDelArticulo,
+      addToCart,
+      nombreDelArticulo
+    };
   }
-}
+});
 </script>
+
+
 <style scoped>
 p {
   color: #662f25;
 }
+
 .trash {
   color: #b66141;
 }
+
 .trash:hover {
   color: #a8350a;
 }

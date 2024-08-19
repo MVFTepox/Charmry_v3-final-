@@ -10,11 +10,11 @@
         </div>
         <button @click="prevSlide"
             class="absolute top-1/2 left-0 transform -translate-y-1/2 p-2 rounded-full">
-            <img src="../assets/icon/arrow_left_38dp_E8EAED_FILL0_wght400_GRAD0_opsz40.png" alt="">
+            <img src="@/assets/icon/arrow_left_38dp_E8EAED_FILL0_wght400_GRAD0_opsz40.png" alt="">
         </button>
         <button @click="nextSlide"
             class="absolute top-1/2 right-0 transform -translate-y-1/2 p-2 rounded-full">
-            <img src="../assets/icon/arrow_right_38dp_E8EAED_FILL0_wght400_GRAD0_opsz40.png" alt="">
+            <img src="@/assets/icon/arrow_right_38dp_E8EAED_FILL0_wght400_GRAD0_opsz40.png" alt="">
         </button>
     </div>
 </template>

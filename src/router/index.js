@@ -11,6 +11,7 @@ import categoriasAnillos from '@/views/categoriasAnillos.vue'
 import categoriasAretes from '@/views/categoriasAretes.vue'
 import categoriasCollares from '@/views/categoriasCollares.vue'
 import categoriasPulseras from '@/views/categoriasPulseras.vue'
+import favoritos from '@/views/favoritos.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -91,7 +92,14 @@ const router = createRouter({
       path: '/categoriasPulseras',
       name: 'categoriasPulseras',
       component: categoriasPulseras
-    }
+    },
+
+    {
+      path: '/favoritos',
+      name: 'favoritos',
+      component: favoritos
+    },
+
     
 
     

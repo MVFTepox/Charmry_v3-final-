@@ -6,7 +6,8 @@
         <div class="border-2 rounded-3xl p-4" style="border-color: #eddaab;">
           <div class="flex items-center justify-between pb-2 mb-2">
             <div class="flex items-center">
-              <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" id="all"  style="accent-color: #b66141; width: 20px; height: 20px;"
+              <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" id="all"
+                style="accent-color: #b66141; width: 20px; height: 20px;"
                 class="transition-transform hover:scale-105 me-3 border-2 rounded-3xl checkbox border-[#b66141] [--chkbg:#b66141] [--chkfg:#eddaab] checked:border-[#b66141]" />
             </div>
             <div class="flex w-full justify-between text-sm md:text-base">
@@ -62,7 +63,8 @@
 
           <div class="flex justify-center">
             <a href="/pedidoconfirmado">
-              <button class="mt-4 px-6  py-2 w-- rounded-3xl w-full text-lg md:text-xl font-medium  tracking-wide hover:scale-105 font-DMsans"
+              <button
+                class="mt-4 px-6  py-2 w-- rounded-3xl w-full text-lg md:text-xl font-medium  tracking-wide hover:scale-105 font-DMsans"
                 style="background-color: #b66141; color: #eddaab;">Pagar</button>
             </a>
           </div>
@@ -75,8 +77,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import CartItem from "@/components/carrito/cartCard.vue";
-import {useAuthStore} from "@/stores/valoresGLobales";
-
+import { useAuthStore } from "@/stores/valoresGLobales";
 
 export default {
   components: {
@@ -84,7 +85,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore();
-    const userId = authStore.userId;
+    const userId = ref(authStore.userId); // Usar ref para reactividad
     const selectAll = ref(true);
     const items = ref([]);
     const shipping = ref('standard');
@@ -93,11 +94,16 @@ export default {
     const total = computed(() => (parseFloat(subtotal.value) + parseFloat(iva.value) + (shipping.value === 'standard' ? 30 : 0)).toFixed(2));
 
     async function fetchUserCart() {
+      if (!userId.value) { // Verificar si userId es null o 0
+        console.warn('No userId available. Cannot fetch user cart.');
+        return;
+      }
+
       try {
         const cartsResponse = await fetch(`http://18.222.147.65:3333/api/carts`);
         if (cartsResponse.ok) {
           const cartsData = await cartsResponse.json();
-          const userCarts = cartsData.filter(cart => cart.user_id === userId);
+          const userCarts = cartsData.filter(cart => cart.user_id === userId.value);
 
           for (const cart of userCarts) {
             if (cart.details_cart_id) {
@@ -207,6 +213,7 @@ export default {
   }
 };
 </script>
+
 
 
 <style>
