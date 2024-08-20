@@ -13,6 +13,7 @@ import categoriasCollares from '@/views/categoriasCollares.vue'
 import categoriasPulseras from '@/views/categoriasPulseras.vue'
 import favoritos from '@/views/favoritos.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

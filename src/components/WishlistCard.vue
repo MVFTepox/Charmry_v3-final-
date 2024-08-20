@@ -58,6 +58,7 @@ export default defineComponent({
         const data = await response.json();
         // Encuentra la imagen correspondiente al producto
         const image = data.find(image => image.product_id === props.product.id);
+        console.log(image);
         imageUrl.value = image ? image.image_url : 'URL_DEFAULT_DE_IMAGEN'; // Proporciona una URL por defecto si no se encuentra la imagen
       } catch (error) {
         console.log('Error al obtener las imágenes:', error);
@@ -70,6 +71,7 @@ export default defineComponent({
         const response = await fetch(`http://18.222.147.65:3333/api/products/${props.product.id}`);
         const data = await response.json();
         nombreDelArticulo.value = data.product_name || 'Nombre no disponible';
+        console.log(data);
         precioDelArticulo.value = data.price ? `$${data.price}` : 'Precio no disponible';
       } catch (error) {
         console.log('Error al obtener los productos:', error);
@@ -123,6 +125,29 @@ export default defineComponent({
         alert('🔴 Hubo un problema al procesar tu solicitud. Por favor, inténtalo de nuevo.'); // Muestra un mensaje de error al usuario
       }
     }
+    async function fetchProducts() {
+  try {
+    const response = await fetch(`http://18.222.147.65:3333/api/products/${props.product.id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    
+    // Verifica si los datos están presentes y no son null
+    if (data) {
+      nombreDelArticulo.value = data.product_name || 'Nombre no disponible';
+      precioDelArticulo.value = data.price ? `$${data.price}` : 'Precio no disponible';
+    } else {
+      nombreDelArticulo.value = 'Nombre no disponible';
+      precioDelArticulo.value = 'Precio no disponible';
+    }
+  } catch (error) {
+    console.error('Error al obtener los productos:', error);
+    nombreDelArticulo.value = 'Nombre no disponible';
+    precioDelArticulo.value = 'Precio no disponible';
+  }
+}
+
 
 
     function removeFromWished() {
