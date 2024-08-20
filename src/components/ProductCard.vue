@@ -6,14 +6,16 @@
         <p class="font-bold font-DMsans">{{ product.product_name }}</p>
         <p class="text-[#b66141] font-DMsans">${{ product.price }}</p>
       </router-link>
-      <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite"
+      <span class="material-symbols-rounded filler text-[#b66141] cursor-pointer" @click="toggleFavorite"
         :style="{ fontVariationSettings: `'FILL' ${currentFill}` }">
         favorite
       </span>
     </div>
+    <a href="*">
     <router-link :to="{ name: 'producto', params: { id: idproduct } }">
       <img :src="product.Images[0]?.image_url" alt="Product Image" class="w-full h-[150px] object-cover mb-2" />
-    </router-link>  
+    </router-link>
+  </a>  
     <button @click="addToCart"
       class="flex rounded-full justify-center h-[30px] bg-[#b66141] border-solid border-[3px] hover:border-[#eddaab] border-[#b66141] hover:bg-white text-[#eddaab]">
       <span class="material-symbols-rounded">shopping_bag</span>
@@ -77,7 +79,8 @@ export default defineComponent({
             throw new Error('Failed to add product to favorites');
           }
           console.log('Product added to favorites');
-          currentFill.value = 1; // Actualiza el estado para mostrar el corazón lleno
+          currentFill.value = 1; 
+          alert('🟢 El producto ha sido agregado a favoritos');// Actualiza el estado para mostrar el corazón lleno
         } else {
           // Eliminar de favoritos
           const response = await fetch('http://18.222.147.65:3333/api/favorites', {
@@ -95,7 +98,7 @@ export default defineComponent({
             throw new Error('Failed to remove product from favorites');
           }
 
-          currentFill.value = 0; // Actualiza el estado para mostrar el corazón vacío
+          currentFill.value = 0; 
         }
       } catch (error) {
         console.error('Error managing favorites:', error);
@@ -143,7 +146,7 @@ export default defineComponent({
 
         const result = await cartResponse.text();
         console.log(result);
-        alert('🟢 El producto ha sido agregado a tu bolsa de deseos');
+        alert('🟢 El producto ha sido agregado al carrito');
 
       } catch (error) {
         console.error('Error:', error);
@@ -168,19 +171,5 @@ p {
   color: #662f25;
 }
 
-.filler:hover {
-  font-variation-settings: "FILL" 1;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
 
-.filler.filled {
-  color: #e91e63;
-  /* Color para el corazón lleno */
-}
-
-.filler:not(.filled):hover {
-  color: #ff4081;
-  /* Color para el corazón vacío al pasar el ratón */
-}
 </style>

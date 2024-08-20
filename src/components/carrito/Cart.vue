@@ -16,8 +16,16 @@
               <span class="w-1/3 text-center text-orange font-DMsans">Total</span>
             </div>
           </div>
-          <CartItem v-for="item in items" :key="item.id" :item="item" :update-totals="updateTotals"
-            :remove-item-from-cart="removeItem" />
+          <!-- Pasa las IDs cart_id y details_cart_id a cada CartItem -->
+          <CartItem
+            v-for="item in items"
+            :key="item.id"
+            :item="item"
+            :update-totals="updateTotals"
+            :remove-item-from-cart="removeItem"
+            :cart-id="item.cart_id"
+            :details-cart-id="item.details_cart_id"
+          />
         </div>
       </div>
 
@@ -85,7 +93,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore();
-    const userId = ref(authStore.userId); // Usar ref para reactividad
+    const userId = ref(authStore.userId);
     const selectAll = ref(true);
     const items = ref([]);
     const shipping = ref('standard');
@@ -94,7 +102,7 @@ export default {
     const total = computed(() => (parseFloat(subtotal.value) + parseFloat(iva.value) + (shipping.value === 'standard' ? 30 : 0)).toFixed(2));
 
     async function fetchUserCart() {
-      if (!userId.value) { // Verificar si userId es null o 0
+      if (!userId.value) {
         console.warn('No userId available. Cannot fetch user cart.');
         return;
       }
@@ -107,7 +115,7 @@ export default {
 
           for (const cart of userCarts) {
             if (cart.details_cart_id) {
-              await fetchCartDetails(cart.details_cart_id);
+              await fetchCartDetails(cart.details_cart_id, cart.id);
             }
           }
         } else {
@@ -118,7 +126,7 @@ export default {
       }
     }
 
-    async function fetchCartDetails(detailsCartId) {
+    async function fetchCartDetails(detailsCartId, cartId) {
       try {
         const detailsCartResponse = await fetch(`http://18.222.147.65:3333/api/detail-cart`);
         if (detailsCartResponse.ok) {
@@ -126,7 +134,7 @@ export default {
           const cartItems = detailsCartData.filter(item => item.id === detailsCartId);
 
           if (cartItems.length > 0) {
-            await Promise.all(cartItems.map(fetchProductDetails));
+            await Promise.all(cartItems.map(cartItem => fetchProductDetails(cartItem, cartId, detailsCartId)));
           } else {
             console.error('No details found for this cart');
           }
@@ -138,7 +146,7 @@ export default {
       }
     }
 
-    async function fetchProductDetails(cartItem) {
+    async function fetchProductDetails(cartItem, cartId, detailsCartId) {
       try {
         const productResponse = await fetch(`http://18.222.147.65:3333/api/products`);
         if (productResponse.ok) {
@@ -152,8 +160,10 @@ export default {
               price: cartItem.price,
               quantity: cartItem.quantity,
               total: cartItem.quantity * cartItem.price,
-              photo: productData.Images[0]?.image_url || '', // Use the first image URL
-              checked: true
+              photo: productData.Images[0]?.image_url || '',
+              checked: true,
+              cart_id: cartId,  // Añadir cart_id
+              details_cart_id: detailsCartId // Añadir details_cart_id
             });
           }
         } else {
@@ -213,8 +223,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style>
 .text-orange {
