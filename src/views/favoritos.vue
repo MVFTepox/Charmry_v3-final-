@@ -1,4 +1,5 @@
 <template>
+
     <div>
       <Navbarr2></Navbarr2>
       <div class="container mx-auto px-10 py-4">
@@ -21,6 +22,7 @@
                 :idFavorite="product.favorite_id" 
             />
         </div>
+    </div>
     </div>
 </template>
 
