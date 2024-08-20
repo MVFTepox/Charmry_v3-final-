@@ -8,7 +8,7 @@
                 </div>
                 <div class="font-DMsans flex flex-col justify-center">
                     <div>
-                        <p class="text-7xl font-elmessiri text-[#CB8844] text-center">{{ nombreDelArticulo }}</p>
+                        <p class="text-7xl font-elmessiri text-[#CB8844] ">{{ nombreDelArticulo }}</p>
                     </div>
                     <div class="justify-center flex">
                         <div class="grid grid-cols-2 my-4 gap-32 md:gap-44 lg:gap-56">
@@ -159,7 +159,7 @@ export default defineComponent({
 
                 const result = await cartResponse.text();
                 console.log(result);
-                alert('🟢 El producto ha sido agregado a tu bolsa de deseos');
+                alert('🟢 El producto ha sido agregado a tu bolsa');
 
             } catch (error) {
                 console.error('Error:', error);

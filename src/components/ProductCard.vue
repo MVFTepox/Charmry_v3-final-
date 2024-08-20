@@ -6,7 +6,7 @@
         <p class="font-bold font-DMsans">{{ product.product_name }}</p>
         <p class="text-[#b66141] font-DMsans">${{ product.price }}</p>
       </router-link>
-      <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite"
+      <span class="material-symbols-rounded filler text-[#b66141] cursor-pointer" @click="toggleFavorite"
         :style="{ fontVariationSettings: `'FILL' ${currentFill}` }">
         favorite
       </span>
@@ -80,7 +80,7 @@ export default defineComponent({
           }
           console.log('Product added to favorites');
           currentFill.value = 1; 
-          alert('🟢 El producto ha sido agregado al carrito');// Actualiza el estado para mostrar el corazón lleno
+          alert('🟢 El producto ha sido agregado a favoritos');// Actualiza el estado para mostrar el corazón lleno
         } else {
           // Eliminar de favoritos
           const response = await fetch('http://18.222.147.65:3333/api/favorites', {
@@ -171,25 +171,5 @@ p {
   color: #662f25;
 }
 
-.filler:hover {
-  font-variation-settings: "FILL" 1;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.filler.filled {
-  color: #dedede;
-  /* Color para el corazón lleno */
-}
-
-.filler:not(.filled):hover {
-  color: #ff4081;
-  /* Color para el corazón vacío al pasar el ratón */
-}
-
-.filler.filled:hover {
-  color: #ff4081;
-  /* Color para el corazón vacío al pasar el ratón */
-}
 
 </style>
