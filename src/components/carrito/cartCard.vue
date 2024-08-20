@@ -26,30 +26,16 @@
       <p class="text-brown text-3xl font-elmessiri">${{ item.total }}</p>
     </div>
     <div>
-      <button @click="showConfirmPopup = true" class="hover:scale-90 px-2 py-1 transition-all btn-sm rounded-2xl bg-[#662f25] text-[#eddaab] font-DMsans">Eliminar</button>
+      <button @click="deleteItem" class="hover:scale-90 px-2 py-1 transition-all btn-sm rounded-2xl bg-[#662f25] text-[#eddaab] font-DMsans">Eliminar</button>
     </div>
-
-    <ConfirmationPopup
-      v-if="showConfirmPopup"
-      :itemName="item.name"
-      :itemId="item.id"
-      :onConfirm="confirmRemove"
-      :onCancel="cancelRemove"
-    />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
-import ConfirmationPopup from "@/components/carrito/ConfirmationPopup.vue";
-
 
 export default {
-  components: {
-    ConfirmationPopup
-  },
   props: {
-    
     item: {
       type: Object,
       required: true
@@ -61,11 +47,50 @@ export default {
     removeItemFromCart: {
       type: Function,
       required: true
+    },
+    cartId: {
+      type: Number,
+      required: true
+    },
+    detailsCartId: {
+      type: Number,
+      required: true
     }
   },
   
   setup(props) {
-    const showConfirmPopup = ref(false);
+    const cartId = ref(props.cartId);
+    const detailsCartId = ref(props.detailsCartId);
+
+    async function deleteItem() {
+      try {
+        // Primero, eliminar el item del detail-cart
+        const deleteDetailResponse = await fetch(`http://18.222.147.65:3333/api/detail-cart/${detailsCartId.value}`, {
+          method: 'DELETE',
+        });
+
+        if (deleteDetailResponse.ok) {
+          console.log('Detail cart item deleted successfully.');
+
+          // Luego, eliminar el item del cart
+          const deleteCartResponse = await fetch(`http://18.222.147.65:3333/api/carts/${cartId.value}`, {
+            method: 'DELETE',
+          });
+
+          if (deleteCartResponse.ok) {
+            console.log('Cart item deleted successfully.');
+            props.removeItemFromCart(props.item.id); // Remover el item de la lista local
+          } else {
+            console.error('Failed to delete cart item.');
+          }
+        } else {
+          console.error('Failed to delete detail cart item.');
+        }
+      } catch (error) {
+        console.error('Error during deletion:', error);
+      }
+    }
+
     function increment() {
       props.item.quantity++;
       props.item.total = props.item.quantity * props.item.price;
@@ -88,22 +113,11 @@ export default {
       props.updateTotals();
     }
     
-    function confirmRemove(itemId) {
-      props.removeItemFromCart(itemId);
-      showConfirmPopup.value = false;
-    }
-    
-    function cancelRemove() {
-      showConfirmPopup.value = false;
-    }
-    
     return {
-      showConfirmPopup,
       increment,
       decrement,
       validateQuantity,
-      confirmRemove,
-      cancelRemove
+      deleteItem // Exponer la función para eliminar el ítem
     };
   }
 };
