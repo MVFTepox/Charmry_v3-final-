@@ -14,7 +14,13 @@ export const useAuthStore = defineStore('auth', {
             this.userId = id;
             localStorage.setItem('userId', JSON.stringify(id));
         },
-    },
+        logout() {
+            this.isLoggedIn = false;
+            this.userId = null;
+            localStorage.setItem('isLoggedIn', JSON.stringify(false));
+            localStorage.setItem('userId', JSON.stringify(null));
+        }
+    }
 });
 
 

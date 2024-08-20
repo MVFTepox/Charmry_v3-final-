@@ -7,6 +7,10 @@ import pedidoConfirmado from '@/views/pedidoConfirmado.vue'
 import registro from '@/views/registro.vue'
 import Login from '@/views/login.vue'
 import categorias from '@/views/categorias.vue'
+import categoriasAnillos from '@/views/categoriasAnillos.vue'
+import categoriasAretes from '@/views/categoriasAretes.vue'
+import categoriasCollares from '@/views/categoriasCollares.vue'
+import categoriasPulseras from '@/views/categoriasPulseras.vue'
 import favoritos from '@/views/favoritos.vue'
 
 const router = createRouter({
@@ -17,11 +21,15 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-
     {
       path: '/prueba',
       name: 'prueba',
       component: prueba
+    },
+    {
+      path: '/pedidoconfirmado',
+      name: 'pedidoconfirmado',
+      component: pedidoConfirmado
     },
 
     {
@@ -60,6 +68,30 @@ const router = createRouter({
       path: '/categorias',
       name: 'categorias',
       component: categorias
+    },
+
+    {
+      path: '/categoriasAnillos',
+      name: 'categoriasAnillos',
+      component: categoriasAnillos
+    },
+
+    {
+      path: '/categoriasAretes',
+      name: 'categoriasAretes',
+      component: categoriasAretes
+    },
+
+    {
+      path: '/categoriasCollares',
+      name: 'categoriasCollares',
+      component: categoriasCollares
+    },
+
+    {
+      path: '/categoriasPulseras',
+      name: 'categoriasPulseras',
+      component: categoriasPulseras
     },
 
     {

@@ -12,11 +12,11 @@
             <img src="../assets/imgs/down.png" alt="Cuenta">
           </a>
           <div :class="{'categorias-menu': true, 'show': isCategorias}" @click.stop>
-            <a href="#">Anillos</a>
-            <a href="#">Aretes</a>
-            <a href="#">Collares</a>
-            <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categoriasAnillos">Anillos</a>
+            <a href="/categoriasAretes">Aretes</a>
+            <a href="/categoriasCollares">Collares</a>
+            <a href="/categoriasPulseras">Pulseras</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
         </div>
         <form class="search" role="search">
@@ -26,13 +26,14 @@
           </button>
         </form>
         <div class="icons">
-          <a href="/NotFound"><img src="../assets/imgs/fav.png" alt="Favorite"></a>
+          <a href="/favoritos"><img src="../assets/imgs/fav.png" alt="Favorite"></a>
           <a href="#" @click="toggleAccountMenu">
             <img src="../assets/imgs/perf.png" alt="Cuenta">
           </a>
           <div :class="{'account-menu': true, 'show': isAccountMenuVisible}" @click.stop>
-            <a href="/login">Iniciar sesión</a>
-            <a href="/registro">Registrarse</a>
+            <a v-if="!authStore.isLoggedIn" href="/login">Iniciar sesión</a>
+            <a v-if="!authStore.isLoggedIn" href="/registro">Registrarse</a>
+            <a v-if="authStore.isLoggedIn" href="#" @click="logout">Cerrar sesión</a>
           </div>
           <a href="/carrito"><img src="../assets/imgs/bag.png" alt="Bolsa"></a>
         </div>
@@ -42,10 +43,10 @@
     <!-- Offcanvas para pantallas pequeñas -->
     <nav class="small-screen-menu">
       <div class="offcanvas-toggle" @click="toggleOffcanvas">
-        <img src="../assets/img/menu.png" alt="Menu">
+        <img src="../assets/imgs/menu.png" alt="Menu">
       </div>
       <a class="navbar-brand" href="/">
-        <img src="../assets/img/logo.png" alt="Logo" />
+        <img src="../assets/imgs/logo.png" alt="Logo" />
       </a>
       <!-- <div class="search-icon" @click="toggleOffcanvas">
         <img src="../assets/img/search.png" alt="Search">
@@ -57,19 +58,20 @@
           </button>
         </div>
         <div class="offcanvas-content">
-          <a href="#" @click="toggleOffcanvasCategorias">Categorías</a>
+          <a  href="#" @click="toggleOffcanvasCategorias">Categorías</a>
           <div :class="{'categorias-menu': true, 'show': isOffcanvasCategorias}">
-            <a href="#">Anillos</a>
-            <a href="#">Aretes</a>
-            <a href="#">Collares</a>
-            <a href="#">Pulseras</a>
-            <a href="/categoria">Phone Charms</a>
+            <a href="/categoriasAnillos">Anillos</a>
+            <a href="/categoriasAretes">Aretes</a>
+            <a href="/categoriasCollares">Collares</a>
+            <a href="/categoriasPulseras">Pulseras</a>
+            <a href="/categorias">Phone Charms</a>
           </div>
           <a href="#">Favoritos</a>
           <a href="#" @click="toggleOffcanvasAccountMenu">Cuenta</a>
           <div :class="{'account-menu': true, 'show': isOffcanvasAccountMenu}">
-            <a href="/login">Iniciar sesión</a>
-            <a href="/registro">Registrarse</a>
+            <a v-if="!authStore.isLoggedIn" href="/login">Iniciar sesión</a>
+            <a v-if="!authStore.isLoggedIn" href="/registro">Registrarse</a>
+            <a v-if="authStore.isLoggedIn" href="#" @click="deslogar">Cerrar sesión</a>
           </div>
           <a href="/carrito">Bolsa</a>
           <form class="search-icon2" role="search">
@@ -86,14 +88,19 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useAuthStore } from '@/stores/valoresGLobales';
 
 export default defineComponent({
+  name: 'Navbar',
   setup() {
     const isCategorias = ref(false);
     const isAccountMenuVisible = ref(false);
     const isOffcanvasVisible = ref(false);
     const isOffcanvasCategorias = ref(false);
     const isOffcanvasAccountMenu = ref(false);
+
+    const authStore = useAuthStore();
+    
 
     const toggleCategorias = () => {
       isCategorias.value = !isCategorias.value;
@@ -115,6 +122,19 @@ export default defineComponent({
       isOffcanvasAccountMenu.value = !isOffcanvasAccountMenu.value;
     };
 
+    const logout = () => {
+      authStore.logout();
+      console.log('Logged out'); // Debugging
+    };
+    const refreshPage = () => {
+      location.reload();
+    };
+
+    const deslogar = () => {
+      logout();
+      refreshPage();
+    }
+
     return {
       isCategorias,
       isAccountMenuVisible,
@@ -126,6 +146,9 @@ export default defineComponent({
       toggleOffcanvas,
       toggleOffcanvasCategorias,
       toggleOffcanvasAccountMenu,
+      logout,
+      authStore,
+      deslogar
     };
   }
 });

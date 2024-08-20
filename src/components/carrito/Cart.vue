@@ -1,55 +1,62 @@
 <template>
   <div class="container mx-auto sm:px-4 lg:px-16 pt-16 px-4">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl text-orange mb-6" style="font-family: 'El Messiri';">Bolsa de compras</h1>
+    <h1 class="text-4xl sm:text-5xl md:text-6xl text-orange mb-6 font-elmessiri">Bolsa de compras</h1>
     <div class="flex flex-col lg:flex-row gap-6">
       <div class="w-full lg:w-2/3">
         <div class="border-2 rounded-3xl p-4" style="border-color: #eddaab;">
           <div class="flex items-center justify-between pb-2 mb-2">
             <div class="flex items-center">
               <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" id="all"
+                style="accent-color: #b66141; width: 20px; height: 20px;"
                 class="transition-transform hover:scale-105 me-3 border-2 rounded-3xl checkbox border-[#b66141] [--chkbg:#b66141] [--chkfg:#eddaab] checked:border-[#b66141]" />
             </div>
             <div class="flex w-full justify-between text-sm md:text-base">
-              <span class="w-1/3 text-left text-orange" style="font-family: 'DM Sans';">Seleccionar todo</span>
-              <span class="w-1/3 text-center text-orange" style="font-family: 'DM Sans';">Cantidad</span>
-              <span class="w-1/3 text-center text-orange" style="font-family: 'DM Sans';">Total</span>
+              <span class="w-1/3 text-left text-orange font-DMsans">Seleccionar todo</span>
+              <span class="w-1/3 text-center text-orange font-DMsans">Cantidad</span>
+              <span class="w-1/3 text-center text-orange font-DMsans">Total</span>
             </div>
           </div>
-          <CartItem v-for="item in items" :key="item.id" :item="item" :update-totals="updateTotals"
-            :remove-item-from-cart="removeItem" />
+          <!-- Pasa las IDs cart_id y details_cart_id a cada CartItem -->
+          <CartItem
+            v-for="item in items"
+            :key="item.id"
+            :item="item"
+            :update-totals="updateTotals"
+            :remove-item-from-cart="removeItem"
+            :cart-id="item.cart_id"
+            :details-cart-id="item.details_cart_id"
+          />
         </div>
       </div>
 
-      <div class="w-full lg:w-1/3 mt-6 lg:mt-0" style="font-family: 'El Messiri';">
+      <div class="w-full lg:w-1/3 mt-6 lg:mt-0 font-elmessiri">
         <div class="border-2 rounded-3xl p-4" style="border-color: #cb8844;">
           <div class="mb-4 flex justify-between items-end text-sm md:text-base">
-            <p class="text-orange text-xl md:text-3xl">Subtotal</p>
-            <p class="text-brown text-2xl md:text-4xl">${{ subtotal }}</p>
+            <p class="text-orange sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">Subtotal</p>
+            <p class="text-brown sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">${{ subtotal }}</p>
           </div>
           <div class="mb-4 flex justify-between items-end text-sm md:text-base">
-            <p class="text-orange text-xl md:text-3xl">IVA</p>
-            <p class="text-brown text-2xl md:text-4xl">${{ iva }}</p>
+            <p class="text-orange sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">IVA</p>
+            <p class="text-brown sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">${{ iva }}</p>
           </div>
 
           <div class="mb-4 flex flex-col justify-between h-full">
-            <p class="text-orange text-xl md:text-3xl">Envío</p>
+            <p class="text-orange sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">Envío</p>
             <div>
-              <div class="flex mt-4">
+              <div class="flex mt-4 justify-center align-middle">
                 <button :class="{ 'active-button': shipping === 'standard' }"
-                  class="btn w-full justify-between hover:border-2 hover:bg-[#eddaab] bg-transparent text-sm md:text-base"
+                  class="w-7/12 lg:w-10/12 rounded-lg flex justify-around px-3 py-2 hover:border-2 hover:bg-[#eddaab] bg-transparent text-sm md:text-base"
                   name="shipping" value="standard" @click="updateShipping('standard')" style="border-color: #cb8844;">
-                  <img src="../assets/img/deliver.png" alt="" class="max-h-8 min-h-6 md:max-h-10 md:min-h-8 w-auto">
-                  <p class="text-orange md:text-lg">Envío estandar</p>
-                  <p class="text-brown text-lg md:text-2xl">$30</p>
+                  <p class="text-orange sm:text-2xl md:text-2xl lg:text-xl text-2xl">Envío estandar</p>
+                  <p class="text-brown lg:text-2xl text-3xl">$30</p>
                 </button>
               </div>
-              <div class="flex mt-4">
+              <div class="flex mt-4 justify-center align-middle">
                 <button :class="{ 'active-button': shipping === 'personal' }"
-                  class="btn w-full justify-between hover:border-2 hover:bg-[#eddaab] bg-transparent text-sm md:text-base"
+                  class="w-7/12 lg:w-10/12 flex py-2 px-3 rounded-lg justify-around hover:border-2 hover:bg-[#eddaab] bg-transparent text-sm md:text-base"
                   name="shipping" value="personal" @click="updateShipping('personal')" style="border-color: #cb8844;">
-                  <img src="../assets/img/volunteer.png" alt="" class="max-h-8 min-h-6 md:max-h-10 md:min-h-8">
-                  <p class="text-orange md:text-lg">Entrega en persona</p>
-                  <p class="text-brown text-lg md:text-2xl">$0</p>
+                  <p class="text-orange sm:text-2xl md:text-2xl lg:text-xl text-2xl">Entrega en persona</p>
+                  <p class="text-brown lg:text-2xl text-3xl">$0</p>
                 </button>
               </div>
             </div>
@@ -57,15 +64,16 @@
 
           <div class="w-full flex justify-center">
             <div class="pt-2 flex justify-between items-end w-full md:w-4/6">
-              <p class="text-brown text-xl md:text-3xl">Total</p>
-              <p class="text-brown text-2xl md:text-4xl">${{ total }}</p>
+              <p class="text-brown sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">Total</p>
+              <p class="text-brown sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl text-2xl">${{ total }}</p>
             </div>
           </div>
 
           <div class="flex justify-center">
-            <a href="/formulario">
-              <button class="btn btn-wide mt-4 rounded-3xl text-lg md:text-xl font-medium tracking-wide hover:scale-105"
-                style="background-color: #b66141; color: #eddaab; font-family: 'DM Sans';">Pagar</button>
+            <a href="/pedidoconfirmado">
+              <button
+                class="mt-4 px-6  py-2 w-- rounded-3xl w-full text-lg md:text-xl font-medium  tracking-wide hover:scale-105 font-DMsans"
+                style="background-color: #b66141; color: #eddaab;">Pagar</button>
             </a>
           </div>
         </div>
@@ -74,38 +82,99 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import CartItem from '../components/cartCard.vue';
+<script>
+import { ref, computed, onMounted } from 'vue';
+import CartItem from "@/components/carrito/cartCard.vue";
+import { useAuthStore } from "@/stores/valoresGLobales";
 
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  total: number;
-  photo: string;
-  checked: boolean;
-}
-
-export default defineComponent({
+export default {
   components: {
     CartItem
   },
   setup() {
+    const authStore = useAuthStore();
+    const userId = ref(authStore.userId);
     const selectAll = ref(true);
-    const items = ref<Item[]>([
-      { id: 1, name: 'Aretes de corazón', price: 32, quantity: 1, total: 32, photo: '../src/assets/img/prod-ex-1.jpg', checked: true },
-      { id: 2, name: 'Pulsera de mariposa', price: 26, quantity: 1, total: 26, photo: '../src/assets/img/prod-ex-2.jpg', checked: true },
-      { id: 3, name: 'Set anillos cuadrados', price: 54, quantity: 1, total: 54, photo: '../src/assets/img/prod-ex-3.jpg', checked: true },
-    ]);
+    const items = ref([]);
     const shipping = ref('standard');
     const subtotal = computed(() => items.value.reduce((acc, item) => item.checked ? acc + item.total : acc, 0).toFixed(2));
     const iva = computed(() => (parseFloat(subtotal.value) * 0.16).toFixed(2));
     const total = computed(() => (parseFloat(subtotal.value) + parseFloat(iva.value) + (shipping.value === 'standard' ? 30 : 0)).toFixed(2));
 
+    async function fetchUserCart() {
+      if (!userId.value) {
+        console.warn('No userId available. Cannot fetch user cart.');
+        return;
+      }
+
+      try {
+        const cartsResponse = await fetch(`http://18.222.147.65:3333/api/carts`);
+        if (cartsResponse.ok) {
+          const cartsData = await cartsResponse.json();
+          const userCarts = cartsData.filter(cart => cart.user_id === userId.value);
+
+          for (const cart of userCarts) {
+            if (cart.details_cart_id) {
+              await fetchCartDetails(cart.details_cart_id, cart.id);
+            }
+          }
+        } else {
+          console.error('Failed to fetch carts');
+        }
+      } catch (error) {
+        console.error('Error fetching carts:', error);
+      }
+    }
+
+    async function fetchCartDetails(detailsCartId, cartId) {
+      try {
+        const detailsCartResponse = await fetch(`http://18.222.147.65:3333/api/detail-cart`);
+        if (detailsCartResponse.ok) {
+          const detailsCartData = await detailsCartResponse.json();
+          const cartItems = detailsCartData.filter(item => item.id === detailsCartId);
+
+          if (cartItems.length > 0) {
+            await Promise.all(cartItems.map(cartItem => fetchProductDetails(cartItem, cartId, detailsCartId)));
+          } else {
+            console.error('No details found for this cart');
+          }
+        } else {
+          console.error('Failed to fetch cart details');
+        }
+      } catch (error) {
+        console.error('Error fetching cart details:', error);
+      }
+    }
+
+    async function fetchProductDetails(cartItem, cartId, detailsCartId) {
+      try {
+        const productResponse = await fetch(`http://18.222.147.65:3333/api/products`);
+        if (productResponse.ok) {
+          const products = await productResponse.json();
+          const productData = products.find(product => product.id === cartItem.product_id);
+
+          if (productData) {
+            items.value.push({
+              id: productData.id,
+              name: productData.product_name,
+              price: cartItem.price,
+              quantity: cartItem.quantity,
+              total: cartItem.quantity * cartItem.price,
+              photo: productData.Images[0]?.image_url || '',
+              checked: true,
+              cart_id: cartId,  // Añadir cart_id
+              details_cart_id: detailsCartId // Añadir details_cart_id
+            });
+          }
+        } else {
+          console.error('Failed to fetch product details');
+        }
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    }
+
     function updateTotals() {
-      // Trigger recomputation of totals
       subtotal.value;
       iva.value;
       total.value;
@@ -124,15 +193,19 @@ export default defineComponent({
       selectAll.value = items.value.every(item => item.checked);
     }
 
-    function updateShipping(option: string) {
+    function updateShipping(option) {
       shipping.value = option;
       updateTotals();
     }
 
-    function removeItem(itemId: number) {
+    function removeItem(itemId) {
       items.value = items.value.filter(item => item.id !== itemId);
       updateTotals();
     }
+
+    onMounted(() => {
+      fetchUserCart();
+    });
 
     return {
       items,
@@ -148,7 +221,7 @@ export default defineComponent({
       removeItem,
     };
   }
-});
+};
 </script>
 
 <style>
@@ -167,7 +240,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 input[type="number"] {
-  appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .active-button {

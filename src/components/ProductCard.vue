@@ -2,18 +2,20 @@
   <div
     class="rounded-lg border-solid border-[3px] p-3 m-2 flex flex-col justify-between h-[300px] w-[200px] border-[#eddaab] font-['DM Sans']">
     <div class="flex justify-between">
-      <a @click="irADetalle(product.id)" class="flex flex-col mb-2">
+      <router-link :to="{ name: 'producto', params: { id: idproduct } }">
         <p class="font-bold font-DMsans">{{ product.product_name }}</p>
         <p class="text-[#b66141] font-DMsans">${{ product.price }}</p>
-      </a>
+      </router-link>
       <span class="material-symbols-rounded filler text-[#b66141]" @click="toggleFavorite"
         :style="{ fontVariationSettings: `'FILL' ${currentFill}` }">
         favorite
       </span>
     </div>
-    <a href="/producto">
+    <a href="*">
+    <router-link :to="{ name: 'producto', params: { id: idproduct } }">
       <img :src="product.Images[0]?.image_url" alt="Product Image" class="w-full h-[150px] object-cover mb-2" />
-    </a>
+    </router-link>
+  </a>  
     <button @click="addToCart"
       class="flex rounded-full justify-center h-[30px] bg-[#b66141] border-solid border-[3px] hover:border-[#eddaab] border-[#b66141] hover:bg-white text-[#eddaab]">
       <span class="material-symbols-rounded">shopping_bag</span>
@@ -40,15 +42,13 @@ export default defineComponent({
     const errors = ref({});
     const currentFill = ref(0);
     const authStore = useAuthStore();
+    const idproduct = props.product.id
 
     const logeado = authStore.isLoggedIn; // Valor que indica si el usuario está logueado
     const userID = authStore.userId;
 
     const router = useRouter();
 
-    const irADetalle = (id) => {
-      router.push({ name: 'producto', params: { id } });
-    };
 
     const checkUserLoggedIn = () => {
       if (!logeado) {
@@ -79,7 +79,8 @@ export default defineComponent({
             throw new Error('Failed to add product to favorites');
           }
           console.log('Product added to favorites');
-          currentFill.value = 1; // Actualiza el estado para mostrar el corazón lleno
+          currentFill.value = 1; 
+          alert('🟢 El producto ha sido agregado al carrito');// Actualiza el estado para mostrar el corazón lleno
         } else {
           // Eliminar de favoritos
           const response = await fetch('http://18.222.147.65:3333/api/favorites', {
@@ -97,7 +98,7 @@ export default defineComponent({
             throw new Error('Failed to remove product from favorites');
           }
 
-          currentFill.value = 0; // Actualiza el estado para mostrar el corazón vacío
+          currentFill.value = 0; 
         }
       } catch (error) {
         console.error('Error managing favorites:', error);
@@ -145,6 +146,7 @@ export default defineComponent({
 
         const result = await cartResponse.text();
         console.log(result);
+        alert('🟢 El producto ha sido agregado al carrito');
 
       } catch (error) {
         console.error('Error:', error);
@@ -157,7 +159,8 @@ export default defineComponent({
       quantity,
       toggleFavorite,
       addToCart,
-      irADetalle
+      
+      idproduct
     };
   }
 });
@@ -175,7 +178,7 @@ p {
 }
 
 .filler.filled {
-  color: #e91e63;
+  color: #dedede;
   /* Color para el corazón lleno */
 }
 
@@ -183,4 +186,10 @@ p {
   color: #ff4081;
   /* Color para el corazón vacío al pasar el ratón */
 }
+
+.filler.filled:hover {
+  color: #ff4081;
+  /* Color para el corazón vacío al pasar el ratón */
+}
+
 </style>
